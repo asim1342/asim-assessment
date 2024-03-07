@@ -1,3 +1,7 @@
-The Transformer struggles with longer sequences during inference, leading to high perplexity. Adjusting context length is costly. Rotary encodings show promise but have limitations. T5 models perform well but demand significant computational resources.
+Can the transformer perform inference on sequences longer than those seen during training? It turns out that the perplexity explodes when we increase the input tokens for inference. Context length is a hyperparameter, and training models with larger context lengths is expensive. As for positional encoding, both sinusoidal and rotary methods are available. Research indicates that rotary encoding outperforms sinusoidal encoding, but the results are not entirely satisfying. On the other hand, T5 achieves the lowest perplexity as the context length increases, albeit at a computational cost.
 
-Alibi introduces negative biases to attention scores based on token distance, moderated by a normalization factor "m." Varying m across attention heads enables nuanced behavior, with higher values constraining attention.
+ALiBi, Attention with Linear Biases:
+The ALiBi method introduces a negative bias to attention scores with a linearly decreasing penalty. It penalizes attention scores more negatively for tokens that are farther away. When computing the dot product of the query and key, a distance bias (b) is subtracted. However, before subtraction, normalization with a float value (m) between 0 and 1 is necessary. Without normalization, the bias (b) would continuously increase with a growing sequence, adversely affecting performance. Since multi-head attention is employed, each head can use a different normalization factor (m), leading to varying behavior among heads. A geometric sequence is used to determine the normalization factor (m), where for 8 heads, (m) is calculated as (2^-8/n).
+
+Model Used:
+For experimental purposes, the same model as NanoGPT was utilized on the Shakespeare dataset.
